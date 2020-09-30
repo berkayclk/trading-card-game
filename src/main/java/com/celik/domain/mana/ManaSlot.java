@@ -11,19 +11,28 @@ public class ManaSlot {
     /**
      * returns empty manaSlot instance
      */
-    public ManaSlot() {}
+    public ManaSlot() {
+        this.state = ManaSlotState.EMPTY;
+    }
 
     public boolean isEmpty() {
-        return false;
+        return ManaSlotState.EMPTY.equals(state);
     }
 
     public boolean isFull() {
-        return false;
+        return ManaSlotState.FULL.equals(state);
     }
 
-    public void fillManaSlot() {}
+    public void fillManaSlot() {
+        this.state = ManaSlotState.FULL;
+    }
 
-    public void useManaSlot() throws EmptyResourceUsingException {}
+    public void useManaSlot() throws EmptyResourceUsingException {
+        if( !isFull() ) {
+            throw new EmptyResourceUsingException();
+        }
+        this.state = ManaSlotState.EMPTY;
+    }
 
     @Override
     public boolean equals(Object o) {

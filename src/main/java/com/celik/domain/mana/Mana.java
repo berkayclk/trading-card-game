@@ -1,5 +1,6 @@
 package com.celik.domain.mana;
 
+import com.celik.exception.EmptyResourceUsingException;
 import com.celik.exception.HasNoCapacityException;
 import com.celik.exception.InsufficientAmountException;
 
@@ -7,8 +8,14 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Mana {
+
+    static private Logger logger = LoggerFactory.getLogger(Mana.class);
 
     public static final int MAX_SLOT_COUNT = 10;
     List<ManaSlot> manaSlots;
@@ -27,7 +34,15 @@ public class Mana {
      * @return ManBar
      */
     public static Mana getManaWithSlotCount(int slotCount) {
-        return null;
+        Mana mana = new Mana();
+        IntStream.range(0, slotCount).forEach(i -> {
+            try {
+                mana.addManaSlot();
+            } catch (HasNoCapacityException e) {
+                logger.warn("Tried to add mana slot when mana has not capacity.");
+            }
+        });
+        return mana;
     }
 
     public List<ManaSlot> getManaSlots() {
@@ -38,11 +53,23 @@ public class Mana {
      * Adds a new empty slot to mana. If it has capacity
      * @throws HasNoCapacityException
      */
-    public void addManaSlot() throws HasNoCapacityException {}
+    public void addManaSlot() throws HasNoCapacityException {
+        if ( !canIncreaseManaSlot() ) {
+            throw new HasNoCapacityException("There is no capacity to add new mana slot.");
+        }
+        manaSlots.add(new ManaSlot());
+        logger.info("Added a mana slot. New mana slot capacity: {}", getManaSlotCount());
+    }
 
-    public void refillManaSlots() {}
+    public void refillManaSlots() {
+        manaSlots.stream().forEach(manaSlot -> manaSlot.fillManaSlot());
+        logger.info("Filled mana slots. New mana value: {}", getManaValue() );
+    }
 
-    public int getManaValue() { return 0; }
+    public int getManaValue() {
+        if (manaSlots.isEmpty()) return 0;
+        return getFullManaSlots().size();
+    }
 
     public int getManaSlotCount() {
         return manaSlots.size();
@@ -58,14 +85,41 @@ public class Mana {
      * @param manaCost
      * @throws InsufficientAmountException
      */
-    public void useMana(int manaCost) throws InsufficientAmountException { }
+    public void useMana(int manaCost) throws InsufficientAmountException {
+        logger.info("Requasted to use {} mane", manaCost);
+        if ( !hasAvailableManaFor(manaCost) ) {logger.info("Requasted to use {} mane", manaCost);
+
+            throw new InsufficientAmountException("There is no mana to using as manaCost");
+        };
+
+        int usedMana = 0;
+        List<ManaSlot> fullSlots = getFullManaSlots();
+        for(ManaSlot slot : fullSlots){
+            if(usedMana == manaCost ) break;
+            try {
+                slot.useManaSlot();
+                usedMana++;
+            } catch (EmptyResourceUsingException e) {
+                logger.error("Tried to use empty mana slot while using mana cost.");
+            }
+        }
+
+        logger.info("Used {} mana. Remaining mana value is {}", usedMana, getManaValue());
+    }
 
     public boolean hasAvailableManaFor(int manaCost) {
-        return false;
+        if( manaSlots.size() == 0 ) return false;
+        return getManaValue() >= manaCost;
+    }
+
+    private boolean canIncreaseManaSlot() {
+        return manaSlots.size() < getMaxSlotCount();
     }
 
     private List<ManaSlot> getFullManaSlots(){
-        return null;
+        return manaSlots.stream()
+                .filter(manaSlot -> manaSlot.isFull())
+                .collect(Collectors.toList());
     }
 
     @Override
