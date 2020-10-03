@@ -16,6 +16,7 @@
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
         <maven.build.version>2.22.2</maven.build.version>
+        <mockito.version>3.1.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -28,6 +29,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring-boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
