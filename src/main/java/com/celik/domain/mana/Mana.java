@@ -86,9 +86,8 @@ public class Mana {
      * @throws InsufficientAmountException
      */
     public void useMana(int manaCost) throws InsufficientAmountException {
-        logger.info("Requasted to use {} mane", manaCost);
-        if ( !hasAvailableManaFor(manaCost) ) {logger.info("Requasted to use {} mane", manaCost);
-
+        logger.info("Requested to use {} mana", manaCost);
+        if ( !hasAvailableManaFor(manaCost) ) {
             throw new InsufficientAmountException("There is no mana to using as manaCost");
         };
 
