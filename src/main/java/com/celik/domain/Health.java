@@ -17,7 +17,6 @@ public class Health {
 
     public Health(int value) {
         this.value = value >= 0 ? value : 0;
-        logger.info("Health: {}", value);
     }
 
     public void increaseHealth() {
