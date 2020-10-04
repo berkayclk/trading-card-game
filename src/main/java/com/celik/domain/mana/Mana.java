@@ -136,6 +136,6 @@ public class Mana {
 
     @Override
     public String toString() {
-        return String.format("Mana Bar: %d Mana / %d Capacity", getManaValue(), getManaSlotCount());
+        return String.format("Mana: %d/%d", getManaValue(), getManaSlotCount());
     }
 }
