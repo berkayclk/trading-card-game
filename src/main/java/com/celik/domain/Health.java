@@ -47,7 +47,7 @@ public class Health {
             value = 0;
             logger.info("Tried to decrease health with value over from health. Health: {}", value);
             throw new InsufficientAmountException("There is no available health to decrease");
-        } else if( decreaseValue <= 0 ) {
+        } else if( decreaseValue < 0 ) {
             logger.error("Tried to decrease health with negative number. Health: {}", value);
             throw new IllegalArgumentException("increaseValue should be positive");
         }
@@ -63,5 +63,10 @@ public class Health {
 
     public boolean hasHealth() {
         return value > 0;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Health: %d", value);
     }
 }

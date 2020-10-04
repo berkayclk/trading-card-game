@@ -146,6 +146,20 @@ public class HealthTest {
     }
 
     @Test
+    public void whenHealthIsDecreasedWithZero_shouldNotBeAnyChange() {
+        //arrange
+        Health health = new Health(5);
+        Assertions.assertEquals(5, health.getHealthValue());
+        Assertions.assertTrue(health.hasHealth());
+
+        //assert
+        Assertions.assertDoesNotThrow(() -> health.decreaseHealth(0));
+        Assertions.assertEquals(5, health.getHealthValue()); //not to be changed
+        Assertions.assertTrue(health.hasHealth());
+
+    }
+
+    @Test
     public void whenHealthIsIncreased_withNegativeValue_shouldThrowsIllegalArgumentException() {
         //arrange
         Health health = new Health(5);
