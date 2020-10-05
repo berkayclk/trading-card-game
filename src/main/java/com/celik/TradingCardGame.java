@@ -127,6 +127,7 @@ public abstract class TradingCardGame {
            bleedingOut(player);
         } catch (HasNoCapacityException e) {
             logger.info("Player {}'s hand has not card capacity to draw new card!", player.getId());
+            notifyPlayer("OVERLOAD! You can not draw a new card when the hand is full.");
         }
     }
 
